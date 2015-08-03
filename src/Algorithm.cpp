@@ -48,7 +48,7 @@ public:
 //		graph.push_back("010000");
 //		graph.push_back("001000");
 
-		//scc
+//scc
 		graph.push_back("0101000000");
 		graph.push_back("0010100000");
 		graph.push_back("1000010000");
@@ -59,8 +59,6 @@ public:
 		graph.push_back("0000000001");
 		graph.push_back("0000000001");
 		graph.push_back("0000000010");
-
-
 
 //scc
 //		graph.push_back("0011010");
@@ -669,6 +667,95 @@ public:
 
 	}
 
+	int kmp(string str, string pat) {
+
+		vector<int> table = vector<int>(pat.length(), 0);
+
+		int i = 0, j = 1;
+		table[i] = 0;
+		do {
+
+			if (pat[i] == pat[j]) {
+
+				table[j] = i + 1;
+				i++;
+				j++;
+			} else {
+
+				if (i == 0) {
+
+					table[j] = 0;
+					j++;
+				} else {
+					i = table[i - 1];
+				}
+			}
+
+		} while (j < pat.length());
+
+		for (int i = 0; i < table.size(); i++) {
+
+			cout << "tab: " << table[i] << endl;
+		}
+		i = 0;
+		j = 0;
+
+		do {
+			if (str[i] == pat[j]) {
+				i++;
+				j++;
+			} else {
+				if (j == 0)
+					i++;
+				else
+					j = table[j - 1];
+			}
+		} while (j < pat.length());
+
+		cout << "i:" << i - 1 << endl;
+
+		return i;
+
+	}
+
+	int bmh(string str, string pattern) {
+
+		int max = pattern.length();
+		vector<int> badMatchTable = vector<int>(256, max);
+
+		for (int i = 0; i < pattern.length() - 1; i++) {
+
+			badMatchTable[pattern[i]] = min(max - 1 - i,
+					badMatchTable[pattern[i]]);
+		}
+
+
+		int i = max - 1;
+		int j = max - 1;
+
+		do {
+			if (str[i] == pattern[j]) {
+
+				i--;
+				j--;
+
+				if (j < 0) {
+					i++;
+
+					break;
+				}
+			} else {
+				i = i + badMatchTable[str[i]] + max - 1 - j;
+				j = max - 1;
+			}
+
+		} while (i < str.length());
+
+		cout << "bmh:" << i << endl;
+
+		return -1;
+	}
+
 };
 
 int main() {
@@ -689,13 +776,17 @@ int main() {
 
 //	vector<string> graph = f.createGraph();
 
-	algorithm.tarjaan(0, graph);
-	cout << algorithm.nominator.size() << endl;
-	for (int i = 0; i < algorithm.nominator.size(); i++) {
+//	algorithm.tarjaan(0, graph);
+//	cout << algorithm.nominator.size() << endl;
+//	for (int i = 0; i < algorithm.nominator.size(); i++) {
+//
+//		cout << "n: " << algorithm.nominator[i] << " m: "
+//				<< algorithm.denominator[i] << endl;
+//	}
 
-		cout << "n: " << algorithm.nominator[i] << " m: "
-				<< algorithm.denominator[i] << endl;
-	}
+//	algorithm.kmp("abxabcdabcaby", "abcdabca");
+
+	algorithm.bmh("abcdabadabacaabacd", "abaca");
 
 	return 0;
 }
