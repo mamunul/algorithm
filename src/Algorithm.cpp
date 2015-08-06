@@ -14,6 +14,7 @@
 #include <utility>
 #include <vector>
 #include <set>
+#include <math.h>
 
 #define INF 10000
 
@@ -729,7 +730,6 @@ public:
 					badMatchTable[pattern[i]]);
 		}
 
-
 		int i = max - 1;
 		int j = max - 1;
 
@@ -754,6 +754,37 @@ public:
 		cout << "bmh:" << i << endl;
 
 		return -1;
+	}
+
+	void rabin_karp(string str, string substr) {
+
+		int subhash = 0;
+		vector<long> strhash;
+
+		for (int j = 0; j < substr.length(); j++) {
+
+			subhash += pow(11, j) * substr[j];
+		}
+
+
+		for (int i = 0; i < str.length(); i ++) {
+
+			string sub = str.substr(i, substr.length());
+
+			int hash = 0;
+
+			for (int j = 0; j < sub.length(); j++) {
+
+				hash += pow(11, j) * sub[j];
+			}
+
+			if(subhash == hash){
+
+				cout << "match:" << i << endl;
+			}
+
+		}
+
 	}
 
 };
@@ -786,7 +817,9 @@ int main() {
 
 //	algorithm.kmp("abxabcdabcaby", "abcdabca");
 
-	algorithm.bmh("abcdabadabacaabacd", "abaca");
+//	algorithm.bmh("abcdabadabacaabacd", "abaca");
+
+	algorithm.rabin_karp("abcdabadabacaabaca", "abaca");
 
 	return 0;
 }
