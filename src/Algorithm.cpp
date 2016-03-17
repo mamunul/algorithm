@@ -13,6 +13,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <deque>
 #include <set>
 #include <math.h>
 
@@ -30,7 +31,7 @@ class Algorithm {
 	;
 
 public:
-	vector<bool> visited;
+	deque<bool> visited;
 	vector<int> nominator;
 	vector<int> denominator;
 	vector<string> createGraph() {
@@ -42,24 +43,44 @@ public:
 //		graph.push_back("1001");
 //		graph.push_back("0010");
 
-//		graph.push_back("011000");
-//		graph.push_back("100110");
-//		graph.push_back("100001");
-//		graph.push_back("010000");
-//		graph.push_back("010000");
-//		graph.push_back("001000");
+//		graph.push_back("01000000");
+//		graph.push_back("00010000");
+//		graph.push_back("01000000");
+//		graph.push_back("00101000");
+//		graph.push_back("00000100");
+//		graph.push_back("00000001");
+//		graph.push_back("00001000");
+//		graph.push_back("00000010");
+
+//		graph.push_back("0110100000");
+//		graph.push_back("0001100000");
+//		graph.push_back("0000111000");
+//		graph.push_back("0000000100");
+//		graph.push_back("0001000010");
+//		graph.push_back("0000100001");
+//		graph.push_back("0000010000");
+//		graph.push_back("0000000000");
+//		graph.push_back("0000000100");
+//		graph.push_back("0000100010");
+
+		graph.push_back("011000");
+		graph.push_back("000110");
+		graph.push_back("000001");
+		graph.push_back("000000");
+		graph.push_back("000000");
+		graph.push_back("000000");
 
 //scc
-		graph.push_back("0101000000");
-		graph.push_back("0010100000");
-		graph.push_back("1000010000");
-		graph.push_back("0010000000");
-		graph.push_back("0000011000");
-		graph.push_back("0000100000");
-		graph.push_back("0000010111");
-		graph.push_back("0000000001");
-		graph.push_back("0000000001");
-		graph.push_back("0000000010");
+//		graph.push_back("0101000000");
+//		graph.push_back("0010100000");
+//		graph.push_back("1000010000");
+//		graph.push_back("0010000000");
+//		graph.push_back("0000011000");
+//		graph.push_back("0000100000");
+//		graph.push_back("0000010111");
+//		graph.push_back("0000000001");
+//		graph.push_back("0000000001");
+//		graph.push_back("0000000010");
 
 //scc
 //		graph.push_back("0011010");
@@ -128,9 +149,9 @@ public:
 //		dfs(0);
 //		cout << "BFS: " << endl;
 //		bfs(0);
-		visited = vector<bool>(graph.size(), false);
+		visited = deque<bool>(graph.size(), false);
 
-		visited = vector<bool>(graph.size(), false);
+//		visited = vector<bool>(graph.size(), false);
 		nominator = vector<int>(graph.size(), 0);
 		denominator = vector<int>(graph.size(), graph.size() + 1);
 		return graph;
@@ -297,7 +318,7 @@ public:
 
 		vector<vector<int> > dp(g.size(), vector<int>(g[0].length(), INF));
 
-		vector<bool> visited(g.size(), false);
+		deque<bool> visited(g.size(), false);
 
 		int i = 0;
 		int mini = 0;
@@ -787,7 +808,86 @@ public:
 
 	}
 
+
+	void dfs2(int ver, vector<string> graph){
+
+		if(!visited[ver]){
+
+			visited[ver] = true;
+
+			dfs_stack.push(ver);
+
+			cout << "visited:" << ver << endl;
+
+			dfs2(ver,graph);
+
+		}else{
+			string nodes = graph[ver];
+			bool c = false;
+			for(int i = 0; i < nodes.length(); i++){
+
+				if(nodes[i] == '1' && !visited[i]){
+					dfs2(i,graph);
+					c = true;
+				}
+
+			}
+			if (!c){
+				cout << "pop:" << dfs_stack.top() << endl;
+
+				dfs_stack.pop();
+
+			}
+
+			int v = dfs_stack.top();
+
+
+
+
+			dfs2(v,graph);
+		}
+	}
+
+	void bfs2(int ver, vector<string> graph){
+
+		if(!visited[ver]){
+
+			visited[ver] = true;
+
+			graph_queue.push(ver);
+
+			cout << "visited:" << ver << endl;
+
+			bfs2(graph_queue.front(),graph);
+
+		}else{
+			string nodes = graph[ver];
+			bool c = false;
+			for(int i = 0; i < nodes.length(); i++){
+
+				if(nodes[i] == '1' && !visited[i]){
+					bfs2(i,graph);
+					c = true;
+				}
+
+			}
+			if (!c){
+				cout << "pop:" << graph_queue.front() << endl;
+
+				graph_queue.pop();
+
+			}
+			if(!graph_queue.empty()){
+			int v = graph_queue.front();
+
+			bfs2(v,graph);
+			}
+		}
+	}
+
 };
+
+
 
 int main() {
 	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
@@ -795,7 +895,7 @@ int main() {
 	Algorithm algorithm;
 	vector<string> graph = algorithm.createGraph();
 
-//	algorithm.dfs(0, graph);
+//	algorithm.bfs2(0, graph);
 
 //	algorithm.dijkstra(graph);
 
@@ -819,7 +919,7 @@ int main() {
 
 //	algorithm.bmh("abcdabadabacaabacd", "abaca");
 
-	algorithm.rabin_karp("abcdabadabacaabaca", "abaca");
+//	algorithm.rabin_karp("abcdabadabacaabaca", "abaca");
 
 	return 0;
 }
