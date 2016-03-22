@@ -25,9 +25,13 @@ class Algorithm {
 
 	stack<int> graph_stack;
 	queue<int> graph_queue;
+	vector<int> low;
+	vector<int> disc;
 
 	stack<int> dfs_stack;
 //	vector<bool> visited;
+	vector<int> parent;
+
 	;
 
 public:
@@ -63,13 +67,30 @@ public:
 //		graph.push_back("0000000100");
 //		graph.push_back("0000100010");
 
-		graph.push_back("011000");
-		graph.push_back("000110");
-		graph.push_back("000001");
-		graph.push_back("000000");
-		graph.push_back("000000");
-		graph.push_back("000000");
+		graph.push_back("01110");
+		graph.push_back("10100");
+		graph.push_back("11000");
+		graph.push_back("10001");
+		graph.push_back("00010");
 
+//		graph.push_back("0110000");
+//		graph.push_back("0011101");
+//		graph.push_back("1100000");
+//		graph.push_back("0100010");
+//		graph.push_back("0100010");
+//		graph.push_back("0001100");
+//		graph.push_back("0100000");
+
+//		graph.push_back("0110000000");
+//		graph.push_back("0001000001");
+//		graph.push_back("0000010000");
+//		graph.push_back("0000100000");
+//		graph.push_back("0100000000");
+//		graph.push_back("0000001000");
+//		graph.push_back("0000000110");
+//		graph.push_back("0000010000");
+//		graph.push_back("0000000100");
+//		graph.push_back("0000100000");
 //scc
 //		graph.push_back("0101000000");
 //		graph.push_back("0010100000");
@@ -154,6 +175,9 @@ public:
 //		visited = vector<bool>(graph.size(), false);
 		nominator = vector<int>(graph.size(), 0);
 		denominator = vector<int>(graph.size(), graph.size() + 1);
+		low = vector<int>(graph.size(), -1);
+		disc = vector<int>(graph.size(), -1);
+		parent = vector<int>(graph.size(), -1);
 		return graph;
 
 	}
@@ -787,8 +811,7 @@ public:
 			subhash += pow(11, j) * substr[j];
 		}
 
-
-		for (int i = 0; i < str.length(); i ++) {
+		for (int i = 0; i < str.length(); i++) {
 
 			string sub = str.substr(i, substr.length());
 
@@ -799,7 +822,7 @@ public:
 				hash += pow(11, j) * sub[j];
 			}
 
-			if(subhash == hash){
+			if (subhash == hash) {
 
 				cout << "match:" << i << endl;
 			}
@@ -808,10 +831,9 @@ public:
 
 	}
 
+	void dfs2(int ver, vector<string> graph) {
 
-	void dfs2(int ver, vector<string> graph){
-
-		if(!visited[ver]){
+		if (!visited[ver]) {
 
 			visited[ver] = true;
 
@@ -819,20 +841,20 @@ public:
 
 			cout << "visited:" << ver << endl;
 
-			dfs2(ver,graph);
+			dfs2(ver, graph);
 
-		}else{
+		} else {
 			string nodes = graph[ver];
 			bool c = false;
-			for(int i = 0; i < nodes.length(); i++){
+			for (int i = 0; i < nodes.length(); i++) {
 
-				if(nodes[i] == '1' && !visited[i]){
-					dfs2(i,graph);
+				if (nodes[i] == '1' && !visited[i]) {
+					dfs2(i, graph);
 					c = true;
 				}
 
 			}
-			if (!c){
+			if (!c) {
 				cout << "pop:" << dfs_stack.top() << endl;
 
 				dfs_stack.pop();
@@ -841,16 +863,53 @@ public:
 
 			int v = dfs_stack.top();
 
-
-
-
-			dfs2(v,graph);
+			dfs2(v, graph);
 		}
 	}
 
-	void bfs2(int ver, vector<string> graph){
+	void dfs3(int ver, vector<string> graph) {
 
-		if(!visited[ver]){
+		visited[ver] = true;
+		cout << "visited:" << ver << endl;
+
+		string nodes = graph[ver];
+		for (int i = 0; i < nodes.length(); i++) {
+
+			if (nodes[i] == '1' && !visited[i]) {
+				dfs3(i, graph);
+			}
+
+		}
+
+	}
+
+	void bfs3(int ver, vector<string> graph) {
+
+		visited[ver] = true;
+		cout << "visited:" << ver << endl;
+		graph_queue.push(ver);
+
+		while (!graph_queue.empty()) {
+
+			string nodes = graph[graph_queue.front()];
+			graph_queue.pop();
+			for (int i = 0; i < nodes.length(); i++) {
+
+				if (nodes[i] == '1' && !visited[i]) {
+					visited[i] = true;
+					graph_queue.push(i);
+					cout << "visited:" << i << endl;
+				}
+
+			}
+
+		}
+
+	}
+
+	void bfs2(int ver, vector<string> graph) {
+
+		if (!visited[ver]) {
 
 			visited[ver] = true;
 
@@ -858,36 +917,114 @@ public:
 
 			cout << "visited:" << ver << endl;
 
-			bfs2(graph_queue.front(),graph);
+			bfs2(graph_queue.front(), graph);
 
-		}else{
+		} else {
 			string nodes = graph[ver];
 			bool c = false;
-			for(int i = 0; i < nodes.length(); i++){
+			for (int i = 0; i < nodes.length(); i++) {
 
-				if(nodes[i] == '1' && !visited[i]){
-					bfs2(i,graph);
+				if (nodes[i] == '1' && !visited[i]) {
+					bfs2(i, graph);
 					c = true;
 				}
 
 			}
-			if (!c){
+			if (!c) {
 				cout << "pop:" << graph_queue.front() << endl;
 
 				graph_queue.pop();
 
 			}
-			if(!graph_queue.empty()){
-			int v = graph_queue.front();
+			if (!graph_queue.empty()) {
+				int v = graph_queue.front();
 
-			bfs2(v,graph);
+				bfs2(v, graph);
 			}
 		}
 	}
 
+	void tarjaan2(int v, vector<string> graph) {
+
+		visited[v] = true;
+		static int ind = 0;
+
+		string n = graph[v];
+		low[v] = ind++;
+		disc[v] = low[v];
+		dfs_stack.push(v);
+
+		for (int i = 0; i < n.length(); i++) {
+			if (n[i] == '1' && low[i] == -1) {
+				tarjaan2(i, graph);
+				low[v] = min(low[v], low[i]);
+
+			} else if (n[i] == '1' && visited[i]) {
+
+				low[v] = min(low[v], disc[i]);
+			}
+
+		}
+
+		if (disc[v] == low[v]) {
+
+			while (dfs_stack.top() != v) {
+				int abc = dfs_stack.top();
+				cout << abc << ", ";
+				dfs_stack.pop();
+//				visited[abc] = false;
+			}
+
+			int abc = dfs_stack.top();
+			cout << abc << endl;
+			dfs_stack.pop();
+//			visited[abc] = false;
+
+		}
+
+	}
+
+	void articulationPoint(int u, vector<string> graph) {
+
+		visited[u] = true;
+		static int ind = 0;
+		disc[u] = ++ind;
+		low[u] = disc[u];
+
+		string n = graph[u];
+
+		int child = 0;
+
+		for (int v = 0; v < n.length(); v++) {
+
+			if (n[v] == '1' && !visited[v]) {
+
+				child++;
+				parent[v] = u;
+				articulationPoint(v, graph);
+
+				low[u] = min(low[u], low[v]);
+
+
+				if(parent[u] == -1 && child >1)
+					cout << "ap: "<< u << endl;
+//
+				if(parent[u] != -1 && low[v] >= disc[u])
+					cout << "ap: " << u << endl;
+
+			} else if (n[v] == '1' && parent[u] != v) {
+//				parent[v] = u;
+				low[u] = min(low[u], disc[v]);
+
+			}
+
+//			if(low[u] == )
+
+		}
+
+	}
+
 };
-
-
 
 int main() {
 	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
@@ -896,9 +1033,14 @@ int main() {
 	vector<string> graph = algorithm.createGraph();
 
 //	algorithm.bfs2(0, graph);
+	cout << "++++++++++++++++" << endl;
+	vector<string> graph2 = algorithm.createGraph();
+//	algorithm.bfs3(0, graph2);
 
+//	algorithm.tarjaan2(0, graph2);
 //	algorithm.dijkstra(graph);
 
+	algorithm.articulationPoint(0,graph);
 //	f.bellman_ford();
 
 //	f.kruskal_mst();
