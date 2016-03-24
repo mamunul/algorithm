@@ -38,10 +38,12 @@ public:
 	deque<bool> visited;
 	vector<int> nominator;
 	vector<int> denominator;
+	stack<pair<int, int> > edge;
 	vector<string> createGraph() {
 
 		vector<string> graph;
 
+		//ap,bc
 //		graph.push_back("0110");
 //		graph.push_back("1000");
 //		graph.push_back("1001");
@@ -67,11 +69,12 @@ public:
 //		graph.push_back("0000000100");
 //		graph.push_back("0000100010");
 
-		graph.push_back("01110");
-		graph.push_back("10100");
-		graph.push_back("11000");
-		graph.push_back("10001");
-		graph.push_back("00010");
+//ap,bc
+//		graph.push_back("01110");
+//		graph.push_back("10100");
+//		graph.push_back("11000");
+//		graph.push_back("10001");
+//		graph.push_back("00010");
 
 //		graph.push_back("0110000");
 //		graph.push_back("0011101");
@@ -118,15 +121,18 @@ public:
 //		graph.push_back("10000");
 //		graph.push_back("00100");
 
-//		graph.push_back("011000000");
-//		graph.push_back("100000000");
-//		graph.push_back("100110000");
-//		graph.push_back("001001101");
-//		graph.push_back("001000110");
-//		graph.push_back("000100000");
-//		graph.push_back("000110000");
-//		graph.push_back("000010001");
-//		graph.push_back("000100010");
+//ap,bc
+//		graph.push_back("01100000010");
+//		graph.push_back("10000000000");
+//		graph.push_back("10011000000");
+//		graph.push_back("00100110100");
+//		graph.push_back("00100011000");
+//		graph.push_back("00010000000");
+//		graph.push_back("00011000000");
+//		graph.push_back("00001000100");
+//		graph.push_back("00010001000");
+//		graph.push_back("10000000001");
+//		graph.push_back("00000000010");
 
 // scc
 //		graph.push_back("010000000");
@@ -986,7 +992,7 @@ public:
 
 	void articulationPoint(int u, vector<string> graph) {
 
-		visited[u] = true;
+//		visited[u] = true;
 		static int ind = 0;
 		disc[u] = ++ind;
 		low[u] = disc[u];
@@ -995,9 +1001,11 @@ public:
 
 		int child = 0;
 
+		cout << "v:" << u << endl;
+
 		for (int v = 0; v < n.length(); v++) {
 
-			if (n[v] == '1' && !visited[v]) {
+			if (n[v] == '1' && disc[v] == -1) {
 
 				child++;
 				parent[v] = u;
@@ -1005,20 +1013,86 @@ public:
 
 				low[u] = min(low[u], low[v]);
 
-
-				if(parent[u] == -1 && child >1)
-					cout << "ap: "<< u << endl;
+				if (parent[u] == -1 && child > 1)
+					cout << "apr: " << u << endl;
 //
-				if(parent[u] != -1 && low[v] >= disc[u])
+				if (parent[u] != -1 && low[v] >= disc[u])
 					cout << "ap: " << u << endl;
 
 			} else if (n[v] == '1' && parent[u] != v) {
 //				parent[v] = u;
+				cout << "v1:" << v << endl;
 				low[u] = min(low[u], disc[v]);
 
 			}
 
 //			if(low[u] == )
+
+		}
+
+	}
+
+	void biconnectedConnected(int v, vector<string> graph) {
+
+		static int index = 0;
+
+		disc[v] = index++;
+		low[v] = disc[v];
+
+		int child = 0;
+		string n = graph[v];
+
+		for (int i = 0; i < n.length(); i++) {
+
+			if (n[i] == '1' && low[i] == -1) {
+
+				child++;
+				parent[i] = v;
+				edge.push(make_pair(v, i));
+				biconnectedConnected(i, graph);
+
+//				dfs_stack.push(i);
+				low[v] = min(low[v], low[i]);
+
+				if ((parent[v] != -1 && low[i] >= disc[v])) {
+
+					cout << "ap:" << v << endl;
+
+					while (!(edge.top().first == v && edge.top().second == i)) {
+
+						cout << "bc:" << edge.top().first << "-"
+								<< edge.top().second;
+						edge.pop();
+					}
+
+					cout << "bc:" << edge.top().first << "-"
+							<< edge.top().second << endl;
+					edge.pop();
+				}
+
+				if ((parent[v] == -1 && child > 1)) {
+
+					cout << "ap:" << v << endl;
+					while (!edge.empty()) {
+						while (!(edge.top().first == v)) {
+
+							cout << "bc:" << edge.top().first << "-"
+									<< edge.top().second;
+							edge.pop();
+						}
+
+						cout << "bc:" << edge.top().first << "-"
+								<< edge.top().second << endl;
+						edge.pop();
+					}
+				}
+
+			} else if (n[i] == '1' && parent[v] != i) {
+
+//				edge.push(make_pair(v, i));
+				low[v] = min(low[v], disc[i]);
+
+			}
 
 		}
 
@@ -1040,7 +1114,8 @@ int main() {
 //	algorithm.tarjaan2(0, graph2);
 //	algorithm.dijkstra(graph);
 
-	algorithm.articulationPoint(0,graph);
+//	algorithm.articulationPoint(0, graph);
+	algorithm.biconnectedConnected(0, graph);
 //	f.bellman_ford();
 
 //	f.kruskal_mst();
