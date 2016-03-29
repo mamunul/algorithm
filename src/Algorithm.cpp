@@ -16,10 +16,12 @@
 #include <deque>
 #include <set>
 #include <math.h>
+#include "FordFulkerson.h"
 
 #define INF 10000
 
 using namespace std;
+using namespace src;
 
 class Algorithm {
 
@@ -39,9 +41,23 @@ public:
 	vector<int> nominator;
 	vector<int> denominator;
 	stack<pair<int, int> > edge;
+
+
 	vector<string> createGraph() {
 
 		vector<string> graph;
+
+
+		//max flow
+
+//		graph.push_back("0");
+
+		graph.push_back("011000");
+				graph.push_back("001100");
+						graph.push_back("010010");
+							graph.push_back("001001");
+							graph.push_back("000101");
+								graph.push_back("000000");
 
 		//ap,bc
 //		graph.push_back("0110");
@@ -188,83 +204,7 @@ public:
 
 	}
 
-	void dfs(int vertex, vector<string> graph) {
 
-		if (find(visited.begin(), visited.end(), false) == visited.end()
-				&& dfs_stack.empty())
-			return;
-
-		if (!visited[vertex]) {
-
-			dfs_stack.push(vertex);
-
-			visited[vertex] = true;
-
-			cout << "dfs: " << vertex << " push: " << vertex << endl;
-		}
-
-		bool no = true;
-		for (int i = 0; i < graph[vertex].size(); i++) {
-
-			if (graph[vertex][i] == '1' && visited[i] == false) {
-
-				cout << "dfs: " << i << " push: " << i << endl;
-				no = false;
-				visited[i] = true;
-				dfs_stack.push(i);
-				return dfs(i, graph);
-				break;
-			}
-		}
-
-		if (no) {
-
-			int v = dfs_stack.top();
-
-			for (int i = 0; i < graph[v].size(); i++) {
-
-				if (graph[v][i] == '1' && visited[i] == false) {
-
-					cout << "dfs: " << v << endl;
-					return dfs(i, graph);
-				}
-			}
-
-			dfs_stack.pop();
-			cout << "dfs: " << v << " pop: " << v << endl;
-
-			return dfs(v, graph);
-		}
-
-	}
-
-	void bfs(int vertex, vector<string> graph) {
-		int c = 0;
-
-		if (!visited[vertex]) {
-			visited[vertex] = true;
-			cout << "Node: " << vertex << endl;
-			graph_queue.push(vertex);
-
-		}
-
-		for (int i = 0; i < (int) graph[vertex].length(); i++) {
-
-			if (!visited[i] && graph[vertex][i] == '1') {
-				c++;
-				visited[i] = true;
-
-				cout << "Node: " << i << endl;
-				graph_queue.push(i);
-
-			}
-		}
-
-		int v = graph_queue.front();
-		graph_queue.pop();
-		bfs(v, graph);
-
-	}
 
 	int lcsstring(string s1, string s2) {
 
@@ -837,41 +777,6 @@ public:
 
 	}
 
-	void dfs2(int ver, vector<string> graph) {
-
-		if (!visited[ver]) {
-
-			visited[ver] = true;
-
-			dfs_stack.push(ver);
-
-			cout << "visited:" << ver << endl;
-
-			dfs2(ver, graph);
-
-		} else {
-			string nodes = graph[ver];
-			bool c = false;
-			for (int i = 0; i < nodes.length(); i++) {
-
-				if (nodes[i] == '1' && !visited[i]) {
-					dfs2(i, graph);
-					c = true;
-				}
-
-			}
-			if (!c) {
-				cout << "pop:" << dfs_stack.top() << endl;
-
-				dfs_stack.pop();
-
-			}
-
-			int v = dfs_stack.top();
-
-			dfs2(v, graph);
-		}
-	}
 
 	void dfs3(int ver, vector<string> graph) {
 
@@ -1097,6 +1002,36 @@ public:
 		}
 
 	}
+	void dfs4(int v,vector<string> graph) {
+
+		dfs_stack.push(v);
+
+		visited[v] = true;
+
+		while (!dfs_stack.empty()) {
+
+			int j = dfs_stack.top();
+
+			dfs_stack.pop();
+
+			cout << "p:" << j << endl;
+
+			for (int i = 0; i < 6; i++) {
+
+				if (graph[j][i] > 0 && !visited[i]) {
+					visited[i] = true;
+
+					dfs_stack.push(i);
+					cout << "v:" << i << endl;
+	//				break;
+				}
+
+			}
+
+		}
+
+
+	}
 
 };
 
@@ -1106,16 +1041,24 @@ int main() {
 	Algorithm algorithm;
 	vector<string> graph = algorithm.createGraph();
 
-//	algorithm.bfs2(0, graph);
+	algorithm.bfs3(0, graph);
 	cout << "++++++++++++++++" << endl;
-	vector<string> graph2 = algorithm.createGraph();
+//	vector<string> graph2 = algorithm.createGraph();
 //	algorithm.bfs3(0, graph2);
 
 //	algorithm.tarjaan2(0, graph2);
 //	algorithm.dijkstra(graph);
 
+//	int m = algorithm.ford_fulkerson(0, 5, g);
+
+	FordFulkerson f = FordFulkerson();
+
+	int m = f.ford_fulkerson();
+
+	cout << "ford fulkerson" << m << endl;
+
 //	algorithm.articulationPoint(0, graph);
-	algorithm.biconnectedConnected(0, graph);
+//	algorithm.biconnectedConnected(0, graph);
 //	f.bellman_ford();
 
 //	f.kruskal_mst();
