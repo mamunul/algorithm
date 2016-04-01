@@ -17,6 +17,9 @@
 #include <set>
 #include <math.h>
 #include "FordFulkerson.h"
+#include "MaximumBipartiteMatching.h"
+#include "MinCutMaxFlow.h"
+#include "StableMarriageProblem.h"
 
 #define INF 10000
 
@@ -1041,7 +1044,7 @@ int main() {
 	Algorithm algorithm;
 	vector<string> graph = algorithm.createGraph();
 
-	algorithm.bfs3(0, graph);
+//	algorithm.bfs3(0, graph);
 	cout << "++++++++++++++++" << endl;
 //	vector<string> graph2 = algorithm.createGraph();
 //	algorithm.bfs3(0, graph2);
@@ -1053,9 +1056,21 @@ int main() {
 
 	FordFulkerson f = FordFulkerson();
 
-	int m = f.ford_fulkerson();
+//	int m = f.ford_fulkerson();
+//
+//	cout << "ford fulkerson" << m << endl;
 
-	cout << "ford fulkerson" << m << endl;
+//	MaximumBipartiteMatching m = MaximumBipartiteMatching();
+
+//	cout << "maximum bipartite matching: " << m.execute() << endl;
+
+	MinCutMaxFlow m2 = MinCutMaxFlow();
+
+//	m2.minCut();
+
+	StableMarriageProblem st;
+
+	st.execute();
 
 //	algorithm.articulationPoint(0, graph);
 //	algorithm.biconnectedConnected(0, graph);

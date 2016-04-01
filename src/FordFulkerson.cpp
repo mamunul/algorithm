@@ -39,7 +39,7 @@ bool FordFulkerson::ford_fulkerson_dfs(int v, int t) {
 		if (j == t)
 			return true;
 
-		cout << "p:" << j << endl;
+//		cout << "p:" << j << endl;
 
 		for (int i = 0; i < 6; i++) {
 
@@ -48,7 +48,7 @@ bool FordFulkerson::ford_fulkerson_dfs(int v, int t) {
 
 				p[i] = j;
 				st.push(i);
-				cout << "v:" << i << endl;
+//				cout << "v:" << i << endl;
 //				break;
 			}
 
@@ -68,7 +68,7 @@ int FordFulkerson::ford_fulkerson() {
 //	ford_fulkerson_dfs(s, t);
 	while (ford_fulkerson_dfs(s, t)) {
 //
-		cout << "got" << endl;
+//		cout << "got" << endl;
 
 		int min_flow = 10000;
 		int j = 0;
