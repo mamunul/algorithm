@@ -20,6 +20,12 @@
 #include "MaximumBipartiteMatching.h"
 #include "MinCutMaxFlow.h"
 #include "StableMarriageProblem.h"
+#include "Power.h"
+#include "FermatPrimalityTest.h"
+#include "MIllerRabinPrimality.h"
+#include "SieveOfEratosthenes.h"
+#include "PrimeFacorization.h"
+#include "PollardRho.h"
 
 #define INF 10000
 
@@ -45,22 +51,20 @@ public:
 	vector<int> denominator;
 	stack<pair<int, int> > edge;
 
-
 	vector<string> createGraph() {
 
 		vector<string> graph;
-
 
 		//max flow
 
 //		graph.push_back("0");
 
 		graph.push_back("011000");
-				graph.push_back("001100");
-						graph.push_back("010010");
-							graph.push_back("001001");
-							graph.push_back("000101");
-								graph.push_back("000000");
+		graph.push_back("001100");
+		graph.push_back("010010");
+		graph.push_back("001001");
+		graph.push_back("000101");
+		graph.push_back("000000");
 
 		//ap,bc
 //		graph.push_back("0110");
@@ -206,8 +210,6 @@ public:
 		return graph;
 
 	}
-
-
 
 	int lcsstring(string s1, string s2) {
 
@@ -780,7 +782,6 @@ public:
 
 	}
 
-
 	void dfs3(int ver, vector<string> graph) {
 
 		visited[ver] = true;
@@ -1005,7 +1006,7 @@ public:
 		}
 
 	}
-	void dfs4(int v,vector<string> graph) {
+	void dfs4(int v, vector<string> graph) {
 
 		dfs_stack.push(v);
 
@@ -1026,13 +1027,12 @@ public:
 
 					dfs_stack.push(i);
 					cout << "v:" << i << endl;
-	//				break;
+					//				break;
 				}
 
 			}
 
 		}
-
 
 	}
 
@@ -1070,7 +1070,31 @@ int main() {
 
 	StableMarriageProblem st;
 
-	st.execute();
+//	st.execute();
+
+	Power p;
+//	cout << p.power4(2, 5, 13) << ":" << p.power3(0.3, -5) << endl;
+
+	FermatPrimalityTest fermat;
+
+//	cout << fermat.isPrime(104729, 3) << endl;
+
+	MIllerRabinPrimality miller;
+
+//	cout << miller.isPrime(104729, 3) << endl;
+
+	SieveOfEratosthenes sieve;
+
+//	sieve.allPrimes(104729);
+
+	PrimeFacorization prime;
+
+//	prime.primeFactors(104729);
+
+
+	PollardRho pollard;
+
+	cout << pollard.primeFactor(10967535067);
 
 //	algorithm.articulationPoint(0, graph);
 //	algorithm.biconnectedConnected(0, graph);
