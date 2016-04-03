@@ -26,6 +26,9 @@
 #include "SieveOfEratosthenes.h"
 #include "PrimeFacorization.h"
 #include "PollardRho.h"
+#include "Root.h"
+#include "RussianPeasantMultiplication.h"
+#include "MergeSort.h"
 
 #define INF 10000
 
@@ -1091,10 +1094,32 @@ int main() {
 
 //	prime.primeFactors(104729);
 
-
 	PollardRho pollard;
 
-	cout << pollard.primeFactor(10967535067);
+//	cout << pollard.primeFactor(10967535067);
+
+	Root rt;
+
+//	cout << rt.sqRoot(100) << endl;
+
+	RussianPeasantMultiplication rus;
+
+//	cout << rus.multiply(47,345);
+
+	MergeSort merge;
+
+	vector<int> v;
+
+	v.push_back(4);
+	v.push_back(7);
+	v.push_back(2);
+	v.push_back(9);
+	v.push_back(1);
+
+	 merge.sort(&v, 0, 4);
+
+	for (int i = 0; i < v.size(); i++)
+		cout << v[i] << endl;
 
 //	algorithm.articulationPoint(0, graph);
 //	algorithm.biconnectedConnected(0, graph);
