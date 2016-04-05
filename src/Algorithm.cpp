@@ -29,6 +29,7 @@
 #include "Root.h"
 #include "RussianPeasantMultiplication.h"
 #include "MergeSort.h"
+#include "Dijkstra.h"
 
 #define INF 10000
 
@@ -292,60 +293,6 @@ public:
 		return dp[s1.length()][s2.length()];
 	}
 
-	void dijkstra(vector<string> g) {
-
-		vector<vector<int> > dp(g.size(), vector<int>(g[0].length(), INF));
-
-		deque<bool> visited(g.size(), false);
-
-		int i = 0;
-		int mini = 0;
-		int m = 1000;
-
-		int vertex = 0;
-		visited[vertex] = true;
-		do {
-			cout << " i: " << i << " v:" << vertex << endl;
-			;
-			for (int j = 0; j < (int) g[vertex].length(); j++) {
-
-				if (vertex == 0) {
-					if (g[vertex][j] - '0' != 0)
-						dp[i][j] = g[vertex][j] - '0';
-
-				} else {
-
-					if (g[vertex][j] - '0' == 0) {
-						dp[i][j] = dp[i - 1][j];
-					} else {
-
-						if (vertex == 0 || j == 0)
-							dp[i][j] = min(dp[i - 1][j], g[vertex][j] - '0');
-						else
-							dp[i][j] = min(dp[i - 1][j],
-									g[vertex][j] - '0' + dp[i - 1][vertex]);
-
-					}
-				}
-
-				cout << " :" << dp[i][j];
-
-				if (m > dp[i][j] && !visited[j]) {
-					mini = min(dp[i][j], mini);
-					mini = j;
-					m = dp[i][j];
-				}
-
-			}
-
-			m = INF;
-			cout << endl;
-			i++;
-			vertex = mini;
-			visited[vertex] = true;
-
-		} while (find(visited.begin(), visited.end(), false) != visited.end());
-	}
 public:
 	void bellman_ford() {
 
@@ -594,75 +541,6 @@ public:
 			}
 
 			cout << endl;
-		}
-
-	}
-
-	void tarjaan(int vertex, vector<string> graph) {
-
-		if (find(visited.begin(), visited.end(), false) == visited.end()
-				&& dfs_stack.empty())
-			return;
-
-//		cout << "t" << endl;
-
-		if (!visited[vertex]) {
-
-			dfs_stack.push(vertex);
-
-			nominator[vertex] = vertex;
-			denominator[vertex] = vertex;
-
-			visited[vertex] = true;
-
-			cout << "dfs: " << vertex << " push: " << vertex << endl;
-		}
-
-		bool no = true;
-		for (int i = 0; i < graph[vertex].size(); i++) {
-
-			if (graph[vertex][i] == '1' && visited[i] == false) {
-
-				cout << "dfs: " << i << " push: " << i << endl;
-				no = false;
-				visited[i] = true;
-				dfs_stack.push(i);
-				nominator[i] = i;
-//				denominator[i] = i;
-				return tarjaan(i, graph);
-				break;
-			}
-			if (graph[vertex][i] == '1' && visited[i] == true) {
-
-				denominator[vertex] = min(denominator[vertex], denominator[i]);
-
-			}
-		}
-
-		if (no) {
-
-			int v = dfs_stack.top();
-
-			for (int i = 0; i < graph[v].size(); i++) {
-
-				if (graph[v][i] == '1' && visited[i] == true) {
-
-					denominator[v] = min(denominator[v], nominator[i]);
-
-				}
-
-				if (graph[v][i] == '1' && visited[i] == false) {
-
-					cout << "dfs: " << v << endl;
-					return tarjaan(i, graph);
-				}
-
-			}
-
-			dfs_stack.pop();
-			cout << "dfs: " << v << " pop: " << v << endl;
-
-			return tarjaan(v, graph);
 		}
 
 	}
@@ -1110,16 +988,20 @@ int main() {
 
 	vector<int> v;
 
-	v.push_back(4);
-	v.push_back(7);
-	v.push_back(2);
-	v.push_back(9);
-	v.push_back(1);
+//	v.push_back(4);
+//	v.push_back(7);
+//	v.push_back(2);
+//	v.push_back(9);
+//	v.push_back(1);
+//
+//	 merge.sort(&v, 0, 4);
+//
+//	for (int i = 0; i < v.size(); i++)
+//		cout << v[i] << endl;
 
-	 merge.sort(&v, 0, 4);
+	Dijkstra d;
 
-	for (int i = 0; i < v.size(); i++)
-		cout << v[i] << endl;
+	d.sortestPath(0);
 
 //	algorithm.articulationPoint(0, graph);
 //	algorithm.biconnectedConnected(0, graph);
