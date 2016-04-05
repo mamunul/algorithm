@@ -30,6 +30,7 @@
 #include "RussianPeasantMultiplication.h"
 #include "MergeSort.h"
 #include "Dijkstra.h"
+#include "BellmanFord.h"
 
 #define INF 10000
 
@@ -294,100 +295,6 @@ public:
 	}
 
 public:
-	void bellman_ford() {
-
-		vector<pair<int, int> > vertices;
-		vector<int> edge;
-
-		int numberOfVertex = 7;
-
-//		vertices.push_back(make_pair(0, 1));
-//		vertices.push_back(make_pair(0, 3));
-//		vertices.push_back(make_pair(3, 1));
-//		vertices.push_back(make_pair(3, 4));
-//		vertices.push_back(make_pair(1, 2));
-//		vertices.push_back(make_pair(2, 3));
-//		vertices.push_back(make_pair(2, 4));
-//		vertices.push_back(make_pair(2, 5));
-//		vertices.push_back(make_pair(4, 5));
-
-		vertices.push_back(make_pair(0, 1));
-		vertices.push_back(make_pair(0, 2));
-		vertices.push_back(make_pair(0, 3));
-		vertices.push_back(make_pair(0, 4));
-		vertices.push_back(make_pair(0, 5));
-		vertices.push_back(make_pair(0, 6));
-		vertices.push_back(make_pair(1, 2));
-		vertices.push_back(make_pair(2, 3));
-		vertices.push_back(make_pair(3, 1));
-		vertices.push_back(make_pair(3, 4));
-		vertices.push_back(make_pair(3, 5));
-		vertices.push_back(make_pair(6, 4));
-		vertices.push_back(make_pair(6, 5));
-
-		edge.push_back(0);
-		edge.push_back(0);
-		edge.push_back(0);
-		edge.push_back(0);
-		edge.push_back(0);
-		edge.push_back(0);
-		edge.push_back(-2);
-		edge.push_back(-1);
-		edge.push_back(4);
-		edge.push_back(2);
-		edge.push_back(-3);
-		edge.push_back(1);
-		edge.push_back(-4);
-
-//		edge.push_back(5);
-//		edge.push_back(-2);
-//		edge.push_back(2);
-//		edge.push_back(3);
-//		edge.push_back(1);
-//		edge.push_back(2);
-//		edge.push_back(7);
-//		edge.push_back(3);
-//		edge.push_back(10);
-
-		vector<vector<int> > dp(numberOfVertex + 1,
-				vector<int>(numberOfVertex, INF));
-
-		for (int i = 0; i < numberOfVertex; i++) {
-
-			for (int j = 0; j < vertices.size(); j++) {
-
-				dp[i + 1][0] = 0;
-				if (vertices[j].first == 0) {
-					dp[i + 1][vertices[j].second] = min(edge[j],
-							dp[i][vertices[j].second]);
-				} else {
-					dp[i + 1][vertices[j].second] = min(
-							edge[j] + dp[i + 1][vertices[j].first],
-							dp[i + 1][vertices[j].second]);
-
-				}
-
-			};
-		}
-
-		for (int i = 0; i < edge.size(); i++) {
-
-			if (vertices[i].first != 0)
-				edge[i] = edge[i] + dp[dp.size() - 1][vertices[i].first]
-						- dp[dp.size() - 1][vertices[i].second];
-		}
-
-		for (int i = 0; i < edge.size(); i++) {
-			cout << ":" << edge[i];
-
-		}
-		cout << endl;
-		for (int j = 0; j < dp[0].size(); j++) {
-			cout << ":" << dp[dp[0].size()][j];
-
-		}
-		cout << endl;
-	}
 
 	void kruskal_mst() {
 
@@ -1001,7 +908,11 @@ int main() {
 
 	Dijkstra d;
 
-	d.sortestPath(0);
+//	d.sortestPath(0);
+
+	BellmanFord bf = BellmanFord();
+
+	bf.shortestPath(0);
 
 //	algorithm.articulationPoint(0, graph);
 //	algorithm.biconnectedConnected(0, graph);
